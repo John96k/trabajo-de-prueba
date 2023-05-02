@@ -1,0 +1,85 @@
+import UIKit
+
+class ViewController: UIViewController {
+
+    @IBOutlet weak var categoryLabel: UILabel!
+    @IBOutlet weak var itemLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var quantityLabel: UILabel!
+    @IBOutlet weak var totalLabel: UILabel!
+    
+    var category: String = ""
+    var item: String = ""
+    var price: Double = 0.0
+    var quantity: Int = 0
+    var total: Double = 0.0
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+    }
+
+    @IBAction func categoryButtonPressed(_ sender: UIButton) {
+        // Open a list of categories to choose from
+        let categories = ["Electronics", "Clothing", "Home Goods", "Books"]
+        let alertController = UIAlertController(title: "Select a Category", message: nil, preferredStyle: .actionSheet)
+        for category in categories {
+            let action = UIAlertAction(title: category, style: .default) { (action) in
+                self.category = category
+                self.categoryLabel.text = category
+            }
+            alertController.addAction(action)
+        }
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func itemButtonPressed(_ sender: UIButton) {
+        // Open a list of items in the selected category to choose from
+        var items: [String] = []
+        switch category {
+        case "Electronics":
+            items = ["Smartphone", "Tablet", "Laptop", "TV"]
+        case "Clothing":
+            items = ["Shirt", "Pants", "Dress", "Shoes"]
+        case "Home Goods":
+            items = ["Furniture", "Kitchenware", "Bedding", "Bath Accessories"]
+        case "Books":
+            items = ["Fiction", "Non-fiction", "Biography", "Children's"]
+        default:
+            items = []
+        }
+        let alertController = UIAlertController(title: "Select an Item", message: nil, preferredStyle: .actionSheet)
+        for item in items {
+            let action = UIAlertAction(title: item, style: .default) { (action) in
+                self.item = item
+                self.itemLabel.text = item
+                self.priceLabel.text = "$" + String(format: "%.2f", self.price)
+                self.quantityLabel.text = String(self.quantity)
+                self.totalLabel.text = "$" + String(format: "%.2f", self.total)
+            }
+            alertController.addAction(action)
+        }
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func addQuantityButtonPressed(_ sender: UIButton) {
+        // Increase the quantity of the selected item
+        quantity += 1
+        total = price * Double(quantity)
+        quantityLabel.text = String(quantity)
+        totalLabel.text = "$" + String(format: "%.2f", total)
+    }
+    
+    @IBAction func subtractQuantityButtonPressed(_ sender: UIButton) {
+        // Decrease the quantity of the selected item
+        if quantity > 0 {
+            quantity -= 1
+            total = price * Double(quantity)
+            quantityLabel.text = String(quantity)
+            totalLabel.text = "$" + String(format: "%.2f", total)
+        }
+    }
+    
+    @IBAction func buyButtonPressed(_ sender: UIButton) {
+        // Charge the user for the total amount of the selected item(s)
+        let alertController = UIAlertController(title: "Confirm Purchase", message: "Total: $" + String(format: "%.2f", total), preferredStyle: .
